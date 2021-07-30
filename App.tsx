@@ -38,6 +38,38 @@ const App = () => {
     extrapolate: 'clamp',
   })
 
+  const profileImageHeight = scrollY.interpolate({
+    inputRange: [0, HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT],
+    outputRange: [PROFILE_IMAGE_MAX_HEIGHT, PROFILE_IMAGE_MIN_HEIGHT],
+    extrapolate: 'clamp',
+  })
+
+  const profileImageMarginTop = scrollY.interpolate({
+    inputRange: [0, HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT],
+    outputRange: [HEADER_MAX_HEIGHT - (PROFILE_IMAGE_MAX_HEIGHT / 2), HEADER_MAX_HEIGHT + 5],
+    extrapolate: 'clamp',
+  })
+
+  // For ios
+  // const headerZindex = scrollY.interpolate({
+  //   inputRange: [0, HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT],
+  //   outputRange: [0, 1],
+  //   extrapolate: 'clamp',
+  // })
+
+  // For android
+  const headerZindex = scrollY.interpolate({
+    inputRange: [HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT, HEADER_MIN_HEIGHT],
+    outputRange: [0, 1],
+    extrapolate: 'clamp'
+  })
+
+  const headerTitleBottom = scrollY.interpolate({
+    inputRange: [0, HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT, HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT + 5 + PROFILE_IMAGE_MIN_HEIGHT, HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT + 5 + PROFILE_IMAGE_MIN_HEIGHT + 26],
+    outputRange: [-20, -20, -20, 0],
+    extrapolate: 'clamp',
+  })
+
   return (
     <View style={styles.container}>
       <Animated.View style={{
@@ -47,9 +79,17 @@ const App = () => {
         right: 0,
         backgroundColor: "lightskyblue",
         height: headerHeight,
+        // zIndex: headerZindex, // For ios
+        elevation: headerZindex, // For Android
+        alignItems: 'center',
       }}>
 
-
+        <Animated.View style={{
+          position: 'absolute',
+          bottom: headerTitleBottom,
+        }}>
+          <Text style={{ fontSize: 14, fontWeight: 'bold', color: 'white' }}>Andrea Da Silva</Text>
+        </Animated.View>
 
       </Animated.View>
 
@@ -60,14 +100,14 @@ const App = () => {
         )}
         style={{ flex: 1 }}
       >
-        <View style={{
-          height: PROFILE_IMAGE_MAX_HEIGHT,
-          width: PROFILE_IMAGE_MAX_HEIGHT,
+        <Animated.View style={{
+          height: profileImageHeight,
+          width: profileImageHeight,
           borderRadius: PROFILE_IMAGE_MAX_HEIGHT / 2,
           borderColor: "white",
           borderWidth: 3,
           overflow: 'hidden',
-          marginTop: HEADER_MAX_HEIGHT - (PROFILE_IMAGE_MAX_HEIGHT / 2),
+          marginTop: profileImageMarginTop,
           marginLeft: 10,
         }}>
           <Image
@@ -78,7 +118,7 @@ const App = () => {
               height: '100%'
             }}
           />
-        </View>
+        </Animated.View>
 
         <View>
           <Text style={{ fontWeight: 'bold', fontSize: 26, paddingLeft: 10 }}>Andrea Da Silva</Text>
